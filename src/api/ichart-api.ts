@@ -51,6 +51,8 @@ export interface MouseEventParams {
 	 * The ID of the marker at the point of the mouse event.
 	 */
 	hoveredMarkerId?: SeriesMarker<Time>['id'];
+
+	paneIndex?: number;
 }
 
 /**
@@ -253,4 +255,22 @@ export interface IChartApi {
 	 * @returns A canvas with the chart drawn on. Any `Canvas` methods like `toDataURL()` or `toBlob()` can be used to serialize the result.
 	 */
 	takeScreenshot(): HTMLCanvasElement;
+
+
+	/**
+	 * Removes a pane with index
+	 *
+	 * @param index the pane to be removed
+	 */
+	removePane(index: number): void;
+
+	/**
+	 * swap the position of two panes.
+	 *
+	 * @param first the first index
+	 * @param second the second index
+	 */
+	swapPane(first: number, second: number): void;
+
+	getPaneElements(): HTMLElement[];
 }
