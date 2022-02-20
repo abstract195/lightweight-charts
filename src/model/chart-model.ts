@@ -351,6 +351,8 @@ export class ChartModel implements IDestroyable {
 	private _backgroundBottomColor: string;
 	private _gradientColorsCache: GradientColorsCache | null = null;
 
+	private paneIdSeq = 0;
+
 	public constructor(invalidateHandler: InvalidateHandler, options: ChartOptionsInternal) {
 		this._invalidateHandler = invalidateHandler;
 		this._options = options;
@@ -513,7 +515,7 @@ export class ChartModel implements IDestroyable {
 
 		const actualIndex = (index === undefined) ? (this._panes.length - 1) + 1 : index;
 
-		const pane = new Pane(this._timeScale, this, actualIndex);
+		const pane = new Pane(this._timeScale, this, ++this.paneIdSeq, actualIndex);
 
 		if (index !== undefined) {
 			this._panes.splice(index, 0, pane);
@@ -536,6 +538,15 @@ export class ChartModel implements IDestroyable {
 		this._invalidate(mask);
 
 		return pane;
+	}
+
+	public removePaneById(paneId: number) {
+		for (let pane of this._panes) {
+			if (pane.paneId === paneId) {
+				const index = this.getPaneIndex(pane);
+				this.removePane(index);
+			}
+		}
 	}
 
 	public removePane(index: number): void {
@@ -993,14 +1004,6 @@ export class ChartModel implements IDestroyable {
 
 	private _createSeries<T extends SeriesType>(options: SeriesOptionsInternal<T>, seriesType: T, pane: Pane): Series<T> {
 		const series = new Series<T>(this, options, seriesType);
-
-		const targetScaleId = options.priceScaleId !== undefined ? options.priceScaleId : this.defaultVisiblePriceScaleId();
-		pane.addDataSource(series, targetScaleId);
-
-		if (!isDefaultPriceScale(targetScaleId)) {
-			// let's apply that options again to apply margins
-			series.applyOptions(options);
-		}
 
 		this._addSeriesToPane(series, pane);
 

@@ -283,7 +283,7 @@ export class TimeScale {
 		return this._points[index]?.time || null;
 	}
 
-	public timeToIndex(time: TimePoint, findNearest: boolean): TimePointIndex | null {
+	public timeToIndex(time: TimePoint, findNearest: boolean, lower: boolean = false): TimePointIndex | null {
 		if (this._points.length < 1) {
 			// no time points available
 			return null;
@@ -297,7 +297,15 @@ export class TimeScale {
 		const index = lowerbound(this._points, time.timestamp, (a: TimeScalePoint, b: UTCTimestamp) => a.time.timestamp < b);
 
 		if (time.timestamp < this._points[index].time.timestamp) {
-			return findNearest ? index as TimePointIndex : null;
+			if (findNearest && lower) {
+				return Math.max(0, index - 1) as TimePointIndex;
+			}
+			else if (findNearest) {
+				return index as TimePointIndex;
+			} else {
+				return null;
+			}
+			//return findNearest ? index as TimePointIndex : null;
 		}
 
 		return index as TimePointIndex;

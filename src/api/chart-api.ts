@@ -33,7 +33,7 @@ import {
 import { CandlestickSeriesApi } from './candlestick-series-api';
 import { DataUpdatesConsumer, SeriesDataItemTypeMap } from './data-consumer';
 import { DataLayer, DataUpdateResponse, SeriesChanges } from './data-layer';
-import { IChartApi, MouseEventHandler, MouseEventParams } from './ichart-api';
+import { IChartApi, MouseEventHandler, MouseEventParams, PaneInfo } from './ichart-api';
 import { IPriceScaleApi } from './iprice-scale-api';
 import { ISeriesApi } from './iseries-api';
 import { ITimeScaleApi } from './itime-scale-api';
@@ -358,8 +358,18 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 		return this._chartWidget.takeScreenshot();
 	}
 
+	public createPane(): PaneInfo {
+		const pane = this._chartWidget.model().createPane();
+		const index = this._chartWidget.model().getPaneIndex(pane);
+		return { paneId: pane.paneId, index: index };
+	}
+
 	public removePane(index: number): void {
 		this._chartWidget.model().removePane(index);
+	}
+
+	public removePaneById(paneId: number): void {
+		this._chartWidget.model().removePaneById(paneId);
 	}
 
 	public swapPane(first: number, second: number): void {

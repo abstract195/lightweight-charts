@@ -273,4 +273,13 @@ export interface IChartApi {
 	swapPane(first: number, second: number): void;
 
 	getPaneElements(): HTMLElement[];
+
+	createPane(): PaneInfo;
+
+	removePaneById(paneId: number): void;
+}
+
+export interface PaneInfo {
+	paneId: number;
+	index: number;
 }

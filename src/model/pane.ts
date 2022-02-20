@@ -45,7 +45,7 @@ export class Pane implements IDestroyable {
 	private _leftPriceScale: PriceScale;
 	private _rightPriceScale: PriceScale;
 
-	public constructor(timeScale: TimeScale, model: ChartModel, initialPaneIndex: number = 0) {
+	public constructor(timeScale: TimeScale, model: ChartModel, public paneId: number, initialPaneIndex: number) {
 		this._timeScale = timeScale;
 		this._model = model;
 		this._grid = new Grid(this);

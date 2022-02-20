@@ -585,7 +585,7 @@ export class Series<T extends SeriesType = SeriesType> extends PriceDataSource i
 
 		this._indexedMarkers = this._markers.map<InternalSeriesMarker<TimePointIndex>>((marker: SeriesMarker<TimePoint>, index: number) => {
 			// the first find index on the time scale (across all series)
-			const timePointIndex = ensureNotNull(timeScale.timeToIndex(marker.time, true));
+			const timePointIndex = ensureNotNull(timeScale.timeToIndex(marker.time, true, true));
 
 			// and then search that index inside the series data
 			const searchMode = timePointIndex < firstDataIndex ? PlotRowSearchMode.NearestRight : PlotRowSearchMode.NearestLeft;
